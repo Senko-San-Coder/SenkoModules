@@ -19,32 +19,23 @@ class PingXMod(loader.Module):
 
     def __init__(self):
         self._start_time = time.time()
-
-    def get_config_structure(self):
-        return {
-            "template": {
-                "type": "text",
-                "name": "Текст пинга",
-                "multiline": True,
-                "placeholder": "Используй {ping} и {uptime}",
-                "default": self.strings["default_template"],
+        self.config = loader.ModuleConfig(
+            {
+                "template": self.strings["default_template"],
+                "loading_text": self.strings["default_loading"],
             },
-            "loading_text": {
-                "type": "text",
-                "name": "Текст загрузки",
-                "default": self.strings["default_loading"],
-            },
-        }
+            self
+        )
 
     async def pinxcmd(self, message):
         start = time.time()
-        loading = self.config.get("loading_text", self.strings["default_loading"])
+        loading = self.config["loading_text"]
         m = await message.edit(loading)
 
         ping = round((time.time() - start) * 1000)
         uptime = str(datetime.timedelta(seconds=int(time.time() - self._start_time)))
 
-        template = self.config.get("template", self.strings["default_template"])
+        template = self.config["template"]
 
         try:
             result = template.format(ping=ping, uptime=uptime)
