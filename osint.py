@@ -1,4 +1,4 @@
-from .. import loader, utils
+from .. import loader, utils  # добавлен нужный импорт
 from hikkatl.types import Message
 from hikkatl.utils import get_display_name
 from hikkatl.errors import RPCError
@@ -63,18 +63,18 @@ class DoxModule(loader.Module):
         for bot in bots:
             try:
                 await self._client.send_message(bot, phone)
-                time.sleep(2)  # Задержка 2-3 секунды
+                await asyncio.sleep(2)  # исправлено
                 response = await self._client.get_messages(bot, limit=1)
                 if response and response[0].text:
                     responses[bot] = response[0].text
-                time.sleep(1)  # Дополнительная задержка
+                await asyncio.sleep(1)  # исправлено
             except RPCError:
                 continue
-            await asyncio.sleep(2)  # Ждём 2 секунды на ответ
+            await asyncio.sleep(2)
         
         # Удаление дубликатов и сортировка
         unique_responses = list(dict.fromkeys(responses.values()))
-        unique_responses.sort()  # Сортировка по алфавиту
+        unique_responses.sort()
         
         # Генерация PDF
         pdf_file = f"dox_{user_id}_{int(current_time)}.pdf"
