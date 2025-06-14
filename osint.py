@@ -1,3 +1,4 @@
+from .. import loader, utils
 from hikkatl.types import Message
 from hikkatl.utils import get_display_name
 from hikkatl.errors import RPCError
